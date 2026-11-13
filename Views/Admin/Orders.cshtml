@@ -1,0 +1,75 @@
+@model IEnumerable<DecorShop.Models.Order>
+@{
+    ViewData["Title"] = "Управление заказами";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+    <h2>Управление заказами</h2>
+    <a asp-action="Index" class="btn btn-secondary">Назад к товарам</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Заказов пока нет.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-sm align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>№</th>
+                    <th>Дата</th>
+                    <th>Состав заказа</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th>Удалить</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">#@order.Id</td>
+                        <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>
+                            <ul class="mb-0 ps-3" style="font-size: 0.9em;">
+                                @foreach (var item in order.Items)
+                                {
+                                    <li>@item.Product?.Name <span class="text-muted">x @item.Quantity</span></li>
+                                }
+                            </ul>
+                        </td>
+                        <td class="fw-bold text-success">@order.TotalAmount руб.</td>
+                        <td>
+                            <!-- Форма для изменения статуса -->
+                            <form asp-action="UpdateOrderStatus" method="post" class="d-flex">
+                                <input type="hidden" name="id" value="@order.Id" />
+                                <select name="status" class="form-select form-select-sm me-2" style="width: auto;">
+                                    <option value="В обработке" selected="@(order.Status == "В обработке")">В обработке</option>
+                                    <option value="Собирается" selected="@(order.Status == "Собирается")">Собирается</option>
+                                    <option value="Отправлен" selected="@(order.Status == "Отправлен")">Отправлен</option>
+                                    <option value="Доставлен" selected="@(order.Status == "Доставлен")">Доставлен</option>
+                                    <option value="Отменен" selected="@(order.Status == "Отменен")">Отменен</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">ОК</button>
+                            </form>
+                        </td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>
+                                <form asp-action="DeleteOrder" method="post" onsubmit="return confirm('Удалить этот заказ навсегда?');">
+                                    <input type="hidden" name="id" value="@order.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

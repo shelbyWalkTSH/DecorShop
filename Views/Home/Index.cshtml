@@ -1,0 +1,158 @@
+﻿@model DecorShop.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<!-- 1. БАННЕР (Слайдер) -->
+<div class="p-5 mb-5 bg-light rounded-4 shadow-sm border position-relative overflow-hidden" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <!-- Декоративный элемент на фоне -->
+    <div class="position-absolute top-0 end-0 h-100 w-50 bg-primary opacity-10" style="clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);"></div>
+    
+    <div class="container-fluid py-4 text-center position-relative z-1">
+        <span class="badge bg-primary text-white mb-3 px-3 py-2 rounded-pill">Новая коллекция 2026</span>
+        <h1 class="display-4 fw-bold text-dark mb-3">Создайте уют в вашем доме</h1>
+        <p class="col-md-8 mx-auto fs-5 text-muted mb-4">
+            Откройте для себя эксклюзивную коллекцию декора. Скидки до 30% на новинки сезона!
+        </p>
+        <a asp-controller="Home" asp-action="Catalog" class="btn btn-primary btn-lg px-5 rounded-pill shadow">Перейти в каталог</a>
+    </div>
+</div>
+
+<!-- 2. БЛОК О НАС (Преимущества) -->
+<div class="row align-items-center mb-5 g-4">
+    <div class="col-md-6">
+        <h2 class="fw-bold mb-3">Почему выбирают нас?</h2>
+        <p class="lead text-muted mb-4">Мы — команда энтузиастов, которая верит, что дом должен быть отражением вашей индивидуальности.</p>
+        <ul class="list-unstyled mt-4">
+            <li class="mb-3 d-flex align-items-center">
+                <span class="fs-4 me-2"><3</span> 
+                <span><strong>Только качественные материалы</strong> и ручная работа</span>
+            </li>
+            <li class="mb-3 d-flex align-items-center">
+                <span class="fs-4 me-2"><3</span> 
+                <span><strong>Быстрая доставка</strong> по всей стране от 1 дня</span>
+            </li>
+            <li class="mb-3 d-flex align-items-center">
+                <span class="fs-4 me-2"><3</span> 
+                <span><strong>Уникальный дизайн</strong> в каждой детали интерьера</span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6 text-center">
+        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=800&auto=format&fit=crop" 
+             class="img-fluid rounded-4 shadow-lg" alt="Интерьер" style="max-height: 400px; object-fit: cover;">
+    </div>
+</div>
+
+<hr class="my-5 border-2 opacity-25">
+
+<!-- 3. ПОПУЛЯРНЫЕ ТОВАРЫ -->
+<div class="d-flex justify-content-between align-items-end mb-4">
+    <div>
+        <span class="text-muted text-uppercase fw-bold" style="font-size: 0.85em; letter-spacing: 1px;">Выбор покупателей</span>
+        <h2 class="fw-bold mb-0">Популярные новинки</h2>
+    </div>
+    <a asp-controller="Home" asp-action="Catalog" class="btn btn-outline-dark rounded-pill px-4">Смотреть все</a>
+</div>
+
+<div class="row g-4 mb-5">
+    @if (!Model.PopularProducts.Any())
+    {
+        <div class="col-12">
+            <div class="alert alert-info shadow-sm">Пока нет товаров. Добавьте их в <a asp-controller="Admin" asp-action="Index" class="alert-link">Админ-панели</a>.</div>
+        </div>
+    }
+    else
+    {
+        @foreach (var product in Model.PopularProducts)
+        {
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 shadow-sm border-0 border-radius-4 overflow-hidden">
+                    <div class="position-relative">
+                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                        {
+                            <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" style="height: 220px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="bg-secondary text-white text-center d-flex align-items-center justify-content-center" style="height: 220px;">Нет фото</div>
+                        }
+                    </div>
+                    <div class="card-body d-flex flex-column p-4">
+                        <h5 class="card-title fw-bold mb-2">@product.Name</h5>
+                        <p class="card-text text-muted flex-grow-1" style="font-size: 0.9em; line-height: 1.4;">
+                            @(product.Description?.Length > 60 ? product.Description.Substring(0, 60) + "..." : product.Description)
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <h4 class="fw-bold text-dark mb-0">@product.Price руб.</h4>
+                            <a href="/Cart/Add/@product.Id" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;" title="Добавить в корзину">
+                                <span class="fs-5">🛒</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<!-- 4. БЛОК АКЦИЙ (Заглушка для дизайна) -->
+<div class="bg-dark text-white rounded-4 p-4 p-md-5 mb-5 shadow-lg position-relative overflow-hidden">
+    <div class="row align-items-center position-relative z-1">
+        <div class="col-md-8 mb-4 mb-md-0 text-center text-md-start">
+            <h2 class="fw-bold mb-3">Скидка 15% на первый заказ!</h2>
+            <p class="mb-0 text-white-50 fs-5">Зарегистрируйтесь на сайте и получите промокод на скидку для знакомства с нашим магазином.</p>
+        </div>
+        <div class="col-md-4 text-center text-md-end">
+            <a href="#" class="btn btn-warning btn-lg fw-bold px-5 rounded-pill shadow">Получить скидку</a>
+        </div>
+    </div>
+</div>
+
+<hr class="my-5 border-2 opacity-25">
+
+<!-- 5. ОТЗЫВЫ ИЗ БАЗЫ ДАННЫХ -->
+<div class="text-center mb-5">
+    <span class="text-muted text-uppercase fw-bold" style="font-size: 0.85em; letter-spacing: 1px;">Мнения</span>
+    <h2 class="fw-bold">Отзывы наших клиентов</h2>
+</div>
+
+@if (!Model.LatestReviews.Any())
+{
+    <div class="alert alert-info text-center shadow-sm">
+        Пока нет одобренных отзывов. Оставьте свой отзыв в каталоге, а затем одобрите его в Админ-панели!
+    </div>
+}
+else
+{
+    <div class="row g-4 mb-5 justify-content-center">
+        @foreach (var review in Model.LatestReviews)
+        {
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm bg-light h-100">
+                    <div class="card-body p-4">
+                        <!-- Звездочки -->
+                        <div class="text-warning mb-3 fs-5">
+                            @for (int i = 0; i < review.Rating; i++) { <span>★</span> }
+                        </div>
+                        
+                        <!-- Текст отзыва -->
+                        <p class="card-text fst-italic text-dark mb-4" style="font-size: 1.05em;">"@review.Text"</p>
+                        
+                        <!-- Подпись: Товар и дата -->
+                        <div class="d-flex align-items-center mt-auto border-top pt-3">
+                            <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">
+                                @(review.Product?.Name?.Substring(0, 1).ToUpper() ?? "Т")
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">@(review.Product?.Name ?? "Товар удален")</h6>
+                                <small class="text-muted">@review.CreatedAt.ToString("dd MMMM yyyy")</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

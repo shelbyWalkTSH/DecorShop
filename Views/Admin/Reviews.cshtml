@@ -1,0 +1,71 @@
+@model IEnumerable<DecorShop.Models.Review>
+
+@{
+    ViewData["Title"] = "Модерация отзывов";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+    <h2>Модерация отзывов</h2>
+    <a asp-action="Index" class="btn btn-secondary">Назад к товарам</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Отзывов пока нет.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped shadow-sm align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Товар</th>
+                <th>Оценка</th>
+                <th>Текст отзыва</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.Product?.Name</td>
+                    <td class="text-warning">
+                        @for (int i = 0; i < item.Rating; i++) { <span>★</span> }
+                    </td>
+                    <td>@item.Text</td>
+                    <td>@item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>
+                        @if(item.IsApproved) 
+                        {
+                            <span class="badge bg-success">Одобрен</span>
+                        } 
+                        else 
+                        {
+                            <span class="badge bg-warning text-dark">На проверке</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <!-- Кнопка Одобрить (показываем только если отзыв не одобрен) -->
+                            @if(!item.IsApproved) 
+                            {
+                                <form asp-action="ApproveReview" method="post">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-success">Одобрить</button>
+                                </form>
+                            }
+
+                            <!-- Кнопка Удалить (доступна всегда) -->
+                            <form asp-action="DeleteReview" method="post" onsubmit="return confirm('Вы уверены, что хотите навсегда удалить этот отзыв?');">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

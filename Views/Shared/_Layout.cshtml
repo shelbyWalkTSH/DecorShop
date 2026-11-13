@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Декор для дома</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DecorShop.styles.css" asp-append-version="true" />
+</head>
+<!-- Добавлены классы, чтобы подвал прижимался к низу страницы -->
+<body class="d-flex flex-column min-vh-100">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold fs-4" asp-area="" asp-controller="Home" asp-action="Index">Декор для дома</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Catalog">Каталог</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Cart" asp-action="Index">Корзина</a>
+                        </li>
+                        
+                        @* Показываем кнопку Админки только тем, у кого есть права (Админ или Модератор) *@
+                        @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-danger fw-bold" asp-area="" asp-controller="Admin" asp-action="Index">Админ-панель</a>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- flex-grow-1 нужен, чтобы основной контент занимал свободное место и выталкивал подвал вниз -->
+    <div class="container flex-grow-1">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- НОВЫЙ КРАСИВЫЙ ПОДВАЛ -->
+    <footer class="bg-dark text-light pt-5 pb-3 mt-auto">
+        <div class="container">
+            <div class="row">
+                <!-- Колонка 1: О магазине -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="text-uppercase fw-bold mb-3 text-white">Декор для дома</h5>
+                    <p class="text-secondary" style="font-size: 0.9em;">
+                        Мы помогаем создавать уют в вашем доме с помощью качественных и стильных предметов интерьера. 
+                        Уют в каждой детали.
+                    </p>
+                </div>
+
+                <!-- Колонка 2: Полезные ссылки (по ТЗ) -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-uppercase fw-bold mb-3 text-white">Навигация</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Index" class="text-secondary text-decoration-none hover-white">Главная</a></li>
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Catalog" class="text-secondary text-decoration-none hover-white">Каталог</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white">Отзывы</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white">Акции</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white">Контакты</a></li>
+                    </ul>
+                </div>
+
+                <!-- Колонка 3: Контакты -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-uppercase fw-bold mb-3 text-white">Контакты</h6>
+                    <ul class="list-unstyled text-secondary" style="font-size: 0.9em;">
+                        <li class="mb-2">📍 г. Москва, ул. Федотова 19</li>
+                        <li class="mb-2">📞 +7 (999) 969-99-66</li>
+                        <li class="mb-2">✉️ info@decorshop.ru</li>
+                    </ul>
+                </div>
+
+                <!-- Колонка 4: Информация о разработчиках (Требование ТЗ) -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-uppercase fw-bold mb-3 text-white">О проекте</h6>
+                    <p class="text-secondary" style="font-size: 0.9em;">
+                        Учебный проект.<br> Команда разработчиков: <br>
+                        <strong class="text-light">Гуменнини Федиди aka FayDoway</strong>
+                    </p>
+                    <!-- Ссылка на распределение задач -->
+                    <a href="#" class="btn btn-outline-light btn-sm mt-2 rounded-pill px-3">Распределение задач</a>
+                </div>
+            </div>
+
+            <hr class="border-secondary mb-4">
+
+            <!-- Нижняя часть подвала (Копирайт и соцсети) -->
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <span class="text-secondary" style="font-size: 0.85em;">
+                        &copy; @DateTime.Now.Year - Декор для дома. Все права защищены.<br>
+                        <a href="#" class="text-secondary text-decoration-none hover-white" style="font-size: 0.85em;">Политика конфиденциальности</a>
+                    </span>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <!-- Заглушки для соцсетей -->
+                    <a href="#" class="text-light me-3 text-decoration-none fw-bold">VK</a>
+                    <a href="#" class="text-light me-3 text-decoration-none fw-bold">TG</a>
+                    <a href="#" class="text-light text-decoration-none fw-bold">WA</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

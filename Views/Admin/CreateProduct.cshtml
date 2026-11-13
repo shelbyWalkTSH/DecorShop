@@ -1,0 +1,44 @@
+@model DecorShop.Models.Product
+
+@{
+    ViewData["Title"] = "Добавить товар";
+}
+
+<h2>Добавить новый товар</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <!-- ВОТ ОНА, ВАЖНАЯ СТРОКА: enctype="multipart/form-data" -->
+        <form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold">Загрузить фото (файл)</label>
+                <input type="file" name="imageFile" class="form-control" accept="image/*" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Название товара</label>
+                <input asp-for="Name" class="form-control" required />
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label">Цена (руб.)</label>
+                <input asp-for="Price" class="form-control" type="number" step="0.01" required />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Описание</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input asp-for="IsPopular" class="form-check-input" />
+                <label asp-for="IsPopular" class="form-check-label">Показывать на главной</label>
+            </div>
+
+            <button type="submit" class="btn btn-success">Сохранить</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

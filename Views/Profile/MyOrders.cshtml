@@ -1,0 +1,63 @@
+@model IEnumerable<DecorShop.Models.Order>
+
+@{
+    ViewData["Title"] = "Мои заказы";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">История моих заказов</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            У вас пока нет заказов. <a asp-controller="Home" asp-action="Catalog" class="alert-link">Перейти в каталог</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var order in Model)
+            {
+                <div class="col-md-12 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Заказ №@order.Id</strong> от @order.OrderDate.ToString("dd.MM.yyyy HH:mm")
+                            </div>
+                            <div>
+                                @if (order.Status == "Отменен")
+                                {
+                                    <span class="badge bg-danger">@order.Status</span>
+                                }
+                                else if (order.Status == "Доставлен")
+                                {
+                                    <span class="badge bg-success">@order.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary">@order.Status</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush mb-3">
+                                @foreach (var item in order.Items)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        <div>
+                                            @item.Product?.Name <span class="text-muted ms-2">x @item.Quantity</span>
+                                        </div>
+                                        <span>@(item.Price * item.Quantity) руб.</span>
+                                    </li>
+                                }
+                            </ul>
+                            <div class="text-end border-top pt-3">
+                                <h5 class="mb-0">Итого: <span class="text-success">@order.TotalAmount руб.</span></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
